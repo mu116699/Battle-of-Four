@@ -18,8 +18,10 @@ signals:
 public slots:
 
 public:
-QPoint selectChessman(bool pCFlag,bool sFlag,QPoint pressPos);
-void drawChessman(QVector<QPoint> chessRed,QVector<QPoint> chessBlue,bool pCFlag,bool sFlag,QPainter *paint,QPoint chessmanSelected);
+QPoint selectChessman(bool pCFlag,QPoint pressPos);//选中棋子
+void moveChessman(QPoint pressPos);
+void drawChessman(QVector<int> chessRed,QVector<int> chessBlue,bool pCFlag,bool sFlag,QPainter *paint,QPoint chessmanSelected);
+QPoint searchBoardCoord(int topoChessman);
 protected:
     virtual void paintEvent(QPaintEvent *);
     virtual void mousePressEvent(QMouseEvent *);
@@ -35,12 +37,15 @@ private:
     QMap<int,QVector<int>> TopoColumn;//列拓扑
     QMap<int,QPoint> chessBoardCoord;//坐标对应
     //棋子常量
-    QVector<QPoint> chessRed;
-    QVector<QPoint> chessBlue;
+    QVector<int> chessRed;
+    QVector<int> chessBlue;
 
     bool playChessFlag;//该谁下棋了
     bool selectFlag;//是否选中棋子
     QPoint chessmanSelected;//选中棋子
+
+    int selectChessTopo;//选中的点
+    int moveChessTopo;//选中的移动点
 };
 
 #endif // CHECKERBOARD_H
