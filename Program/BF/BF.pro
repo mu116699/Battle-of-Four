@@ -18,13 +18,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     checkerboard.cpp \
     chessman.cpp \
-    main.cpp \
-    mainwindow.cpp
+    main.cpp
 
 HEADERS += \
     checkerboard.h \
-    chessman.h \
-    mainwindow.h
+    chessman.h
 
 FORMS += \
     mainwindow.ui
