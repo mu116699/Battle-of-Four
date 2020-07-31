@@ -9,6 +9,7 @@
 #include <QString>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QMessageBox>
 
 Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
 {
@@ -27,13 +28,16 @@ Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
 
    playChessFlag = true;//红方先手，否子蓝方
    selectFlag = false;
+   canMoveFlag = false;
    chessmanSelected = QPoint(0,0);
    TopoBoard={{1,{5,2}},{2,{1,6,3}},{3,{2,7,4}},{4,{3,8}},
               {5,{9,6,1}},{6,{5,10,7,2}},{7,{6,11,8,3}},{8,{7,12,4}},
               {9,{13,10,5}},{10,{9,14,11,6}},{11,{10,15,12,7}},{12,{11,16,8}},
               {13,{14,9,0}},{14,{13,15,10}},{15,{14,16,11}},{16,{15,12}}};
-   TopoRow={{1,{1,2,3,4}},{2,{5,6,7,8}},{3,{9,10,11,12}},{4,{13,14,15,16}}};//行拓扑
-   TopoColumn={{1,{1,5,9,13}},{2,{2,6,10,14}},{3,{3,7,11,15}},{4,{4,8,12,16}}};//列拓扑
+   TopoAndCoord = {{1,{1,1}},{2,{1,2}},{3,{1,3}},{4,{1,4}},{5,{2,1}},{6,{2,2}},{7,{2,3}},{8,{2,4}},
+                   {9,{3,1}},{10,{3,2}},{11,{3,3}},{12,{3,4}},{13,{4,1}},{14,{4,2}},{15,{4,3}},{16,{4,4}}};
+   TopoColumn={{1,{1,2,3,4}},{2,{5,6,7,8}},{3,{9,10,11,12}},{4,{13,14,15,16}}};//行拓扑
+   TopoRow={{1,{1,5,9,13}},{2,{2,6,10,14}},{3,{3,7,11,15}},{4,{4,8,12,16}}};//列拓扑
    chessBoardCoord={{1,QPoint(100,400)},{2,QPoint(200,400)},{3,QPoint(300,400)},{4,QPoint(400,400)},
               {5,QPoint(100,300)},{6,QPoint(200,300)},{7,QPoint(300,300)},{8,QPoint(400,300)},
               {9,QPoint(100,200)},{10,QPoint(200,200)},{11,QPoint(300,200)},{12,QPoint(400,200)},
@@ -43,6 +47,205 @@ Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
 Checkerboard::~Checkerboard()
 {
 
+}
+
+void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
+{
+    if(getState(getTopoColumn[0])==-1)
+    {
+        if(playChessFlag==false)
+        {
+            if((getState(getTopoColumn[1])==0)&&(getState(getTopoColumn[2])==0)&&(getState(getTopoColumn[3])==1))
+            {
+                deleteChessman(chessBlue,getTopoColumn[3]);
+                if(chessBlue.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                                          QStringLiteral("Red Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+            else if((getState(getTopoColumn[1])==1)&&(getState(getTopoColumn[2])==0)&&(getState(getTopoColumn[3])==0))
+            {
+                deleteChessman(chessBlue,getTopoColumn[1]);
+                if(chessBlue.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                                       QStringLiteral("Red Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+        }
+        else
+        {
+            if((getState(getTopoColumn[1])==1)&&(getState(getTopoColumn[2])==1)&&(getState(getTopoColumn[3])==0))
+            {
+                deleteChessman(chessRed,getTopoColumn[3]);
+                if(chessRed.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                                        QStringLiteral("Blue Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+            else if((getState(getTopoColumn[1])==0)&&(getState(getTopoColumn[2])==1)&&(getState(getTopoColumn[3])==1))
+            {
+                deleteChessman(chessRed,getTopoColumn[1]);
+                if(chessRed.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                                   QStringLiteral("Blue Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+        }
+    }
+    else if (getState(getTopoColumn[3])==-1)
+    {
+        if(playChessFlag==false)
+        {
+            if((getState(getTopoColumn[0])==0)&&(getState(getTopoColumn[1])==0)&&(getState(getTopoColumn[2])==1))
+            {
+                deleteChessman(chessBlue,getTopoColumn[2]);
+                if(chessBlue.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                              QStringLiteral("Red Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+            else if((getTopoColumn[0]==1)&&(getTopoColumn[1]==0)&&(getTopoColumn[2]==0))
+            {
+                deleteChessman(chessBlue,getTopoColumn[0]);
+                if(chessBlue.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                             QStringLiteral("Red Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+        }
+        else
+        {
+            if((getState(getTopoColumn[0])==1)&&(getState(getTopoColumn[1])==1)&&(getState(getTopoColumn[2])==0))
+            {
+                deleteChessman(chessRed,getTopoColumn[2]);
+                if(chessRed.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                       QStringLiteral("Blue Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+            else if((getState(getTopoColumn[0])==0)&&(getState(getTopoColumn[1])==1)&&(getState(getTopoColumn[2])==1))
+            {
+                deleteChessman(chessRed,getTopoColumn[0]);
+                if(chessRed.size()==1)
+                {
+                    if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                           QStringLiteral("Blue Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+                    {
+                        chessRed={13,14,15,16};
+                        chessBlue = {1,2,3,4};
+                    }
+                    else
+                    {
+                        close();
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Checkerboard::deleteChessman(QVector<int> &chessman, int delTopo)
+{
+    for (int i = 0;i<chessman.size();i++)
+    {
+        if(chessman[i]==delTopo)
+        {
+            chessman.remove(i);
+        }
+    }
+}
+
+int Checkerboard::getState(int TopoRC)
+{
+    //移动的位置不能有棋子可以走
+    for (int i =0;i<chessRed.size();i++)
+    {
+        if(chessRed[i]==TopoRC)
+            return 0;
+    }
+    for (int i =0;i<chessBlue.size();i++)
+    {
+        if(chessBlue[i]==TopoRC)
+            return 1;
+    }
+    return -1;
+}
+
+
+void Checkerboard::killChessman(int moveChessTopo)
+{
+    //获取行列序号
+    QVector<int> RowColumn = TopoAndCoord.value(moveChessTopo);
+    //行列判断
+    QVector<int> getTopoColumn = TopoColumn.value(RowColumn[0]);
+    QVector<int> getTopoRow = TopoRow.value(RowColumn[1]);
+
+    rowColumnjudge(getTopoColumn);
+    rowColumnjudge(getTopoRow);
+    canMoveFlag =false;
 }
 
 //Chessman chessmanRed[4];
@@ -138,10 +341,16 @@ void Checkerboard::drawChessman(QVector<int> chessRed,QVector<int> chessBlue,boo
 }
 void Checkerboard::mousePressEvent(QMouseEvent * e)
 {
+    //每次先判断是否有子可走
+
     QPoint mPos = e->pos();
     if(selectFlag==true)
     {
         moveChessman(mPos);
+        if(canMoveFlag == true)
+        {
+            killChessman(moveChessTopo);
+        }
     }
     chessmanSelected = selectChessman(playChessFlag,mPos);//选中棋子
     repaint();
@@ -220,6 +429,7 @@ void Checkerboard::moveChessman(QPoint pressPos)
                 }
                 playChessFlag =false;
                 selectFlag = false;
+                canMoveFlag = true;
             }
             else
             {
@@ -229,6 +439,7 @@ void Checkerboard::moveChessman(QPoint pressPos)
                 }
                 playChessFlag =true;
                 selectFlag = false;
+                canMoveFlag = true;
             }
         }
     }

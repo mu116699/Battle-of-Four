@@ -18,6 +18,10 @@ signals:
 public slots:
 
 public:
+void rowColumnjudge(QVector<int> getTopoColumn);
+void deleteChessman(QVector<int> &chessman,int delTopo);
+int getState(int TopoRC);
+void killChessman(int moveChessTopo);
 QPoint selectChessman(bool pCFlag,QPoint pressPos);//选中棋子
 void moveChessman(QPoint pressPos);
 void drawChessman(QVector<int> chessRed,QVector<int> chessBlue,bool pCFlag,bool sFlag,QPainter *paint,QPoint chessmanSelected);
@@ -33,6 +37,7 @@ private:
     bool m_bIsRedTurn;		//当前该红方下
 
     QMap<int,QVector<int>>TopoBoard;//棋格拓扑
+    QMap<int,QVector<int>> TopoAndCoord;//棋格与拓扑之间的关系
     QMap<int,QVector<int>> TopoRow;//行拓扑
     QMap<int,QVector<int>> TopoColumn;//列拓扑
     QMap<int,QPoint> chessBoardCoord;//坐标对应
@@ -42,6 +47,7 @@ private:
 
     bool playChessFlag;//该谁下棋了
     bool selectFlag;//是否选中棋子
+    bool canMoveFlag;
     QPoint chessmanSelected;//选中棋子
 
     int selectChessTopo;//选中的点
