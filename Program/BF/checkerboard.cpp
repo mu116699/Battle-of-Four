@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QMessageBox>
+#include <QDebug>
 
 Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
 {
@@ -29,6 +30,7 @@ Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
    playChessFlag = true;//红方先手，否子蓝方
    selectFlag = false;
    canMoveFlag = false;
+   movedFlag = false;
    chessmanSelected = QPoint(0,0);
    TopoBoard={{1,{5,2}},{2,{1,6,3}},{3,{2,7,4}},{4,{3,8}},
               {5,{9,6,1}},{6,{5,10,7,2}},{7,{6,11,8,3}},{8,{7,12,4}},
@@ -43,14 +45,91 @@ Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
               {9,QPoint(100,200)},{10,QPoint(200,200)},{11,QPoint(300,200)},{12,QPoint(400,200)},
               {13,QPoint(100,100)},{14,QPoint(200,100)},{15,QPoint(300,100)},{16,QPoint(400,100)}};
 
+
+   startButton = new QPushButton("Sart the Game",this);
+   startButton->setGeometry(500,130,200,40);
+   machine = new QPushButton("Man-Machine",this);
+   machine->setGeometry(500,200,200,40);
+   handicap = new QPushButton("Handicap",this);
+   handicap->setGeometry(500,270,200,40);
+   help = new QPushButton("Help",this);
+   help->setGeometry(500,340,200,40);
+
+   connect(startButton,SIGNAL(clicked()),this,SLOT(startGame()));
+   connect(handicap,SIGNAL(clicked()),this,SLOT(oneHandicap()));
+
+   welcome = new QLabel("Welcome to Battle of Four!",this);
+   welcome->setGeometry(200,0,400,100);
+   welcome->setStyleSheet("color:red");// 文本颜色
+   welcome->setFont(QFont( "Timers" , 17,  QFont::Bold) );
+   //thanks = new QLabel("Thanks to Qiaoli Lu, Min Fu \nand other friends of Jiyuan,\nusing version 1.0.",this);
+     thanks = new QLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXX \nXXXXXXXXXXXXXXXXXXXXXXXXXXX,\nXXXXXXXXXXXXXXXXX.",this);
+   thanks->setGeometry(460,390,300,60);
+   //thanks->setStyleSheet("color:blue");// 文本颜色
+   author = new QLabel("Author:Jack Tian©",this);
+   author->setGeometry(600,450,200,20);
+
 }
 Checkerboard::~Checkerboard()
 {
 
 }
 
+void Checkerboard::startGame()
+{
+    if(movedFlag==true)
+    {
+        if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Start the Game"),
+                              QStringLiteral("Restart the game?"),QMessageBox::Yes | QMessageBox:: No))
+        {
+            chessRed={13,14,15,16};
+            chessBlue = {1,2,3,4};
+            movedFlag = false;
+        }
+        else
+        {
+            close();
+        }
+    }
+    else
+    {
+        chessRed={13,14,15,16};
+        chessBlue = {1,2,3,4};
+    }
+}
+
+void Checkerboard::oneHandicap()
+{
+    if(playChessFlag==true)
+    {
+        playChessFlag =false;
+    }
+    else
+    {
+        playChessFlag =true;
+    }
+}
+
+bool Checkerboard::canMoveChess(QVector<int> chess)
+{
+    for (int i =0;i<chess.size();i++) {
+        //获取行列序号
+        QVector<int> RowColumn = TopoAndCoord.value(chess[i]);
+        QVector<int> getTopoRowColumn = TopoColumn.value(RowColumn[0]);
+        getTopoRowColumn.append(TopoRow.value(RowColumn[1]));
+        for (int i = 0;i<getTopoRowColumn.size();i++) {
+            if(getState(getTopoRowColumn[i])==-1)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
 {
+    qDebug()<<getState(getTopoColumn[0])<<getState(getTopoColumn[1])<<getState(getTopoColumn[2])<<getState(getTopoColumn[3]);
     if(getState(getTopoColumn[0])==-1)
     {
         if(playChessFlag==false)
@@ -149,7 +228,7 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     }
                 }
             }
-            else if((getTopoColumn[0]==1)&&(getTopoColumn[1]==0)&&(getTopoColumn[2]==0))
+            else if((getState(getTopoColumn[0])==1)&&(getState(getTopoColumn[1])==0)&&(getState(getTopoColumn[2])==0))
             {
                 deleteChessman(chessBlue,getTopoColumn[0]);
                 if(chessBlue.size()==1)
@@ -342,7 +421,43 @@ void Checkerboard::drawChessman(QVector<int> chessRed,QVector<int> chessBlue,boo
 void Checkerboard::mousePressEvent(QMouseEvent * e)
 {
     //每次先判断是否有子可走
+    if(playChessFlag==true)
+    {
 
+        if(false ==canMoveChess(chessRed))
+        {
+            qDebug()<<"red"<<canMoveChess(chessRed);
+            if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                                  QStringLiteral("Blue Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+            {
+                chessRed={13,14,15,16};
+                chessBlue = {1,2,3,4};
+            }
+            else
+            {
+                close();
+            }
+
+          }
+    }
+    else
+    {
+        if(false ==canMoveChess(chessBlue))
+        {
+            qDebug()<<"Blue"<<canMoveChess(chessBlue);
+            if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Congratulations"),
+                                  QStringLiteral("Red Win!!!\nDo you want to continue?"),QMessageBox::Yes | QMessageBox:: No))
+            {
+                chessRed={13,14,15,16};
+                chessBlue = {1,2,3,4};
+            }
+            else
+            {
+                close();
+            }
+
+          }
+    }
     QPoint mPos = e->pos();
     if(selectFlag==true)
     {
@@ -355,10 +470,7 @@ void Checkerboard::mousePressEvent(QMouseEvent * e)
     chessmanSelected = selectChessman(playChessFlag,mPos);//选中棋子
     repaint();
 }
-void Checkerboard::mouseReleaseEvent(QMouseEvent *)
-{
 
-}
 QPoint Checkerboard::selectChessman(bool pCFlag,QPoint pressPos)
 {
     if(pCFlag==true)
@@ -430,6 +542,7 @@ void Checkerboard::moveChessman(QPoint pressPos)
                 playChessFlag =false;
                 selectFlag = false;
                 canMoveFlag = true;
+                movedFlag = true;
             }
             else
             {
@@ -440,6 +553,7 @@ void Checkerboard::moveChessman(QPoint pressPos)
                 playChessFlag =true;
                 selectFlag = false;
                 canMoveFlag = true;
+                movedFlag = true;
             }
         }
     }
