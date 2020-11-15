@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "D:\\BF\\Program\\build-BF-Android_for_arm64_v8a_Clang_Qt_5_13_2_for_Android_ARM64_v8a-Release\\android-build\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-rs\\values-rs.xml",
+            "map": [
+                {
+                    "source": "C:\\Qt\\Qt5.13.2\\5.13.2\\android_arm64_v8a\\src\\android\\java\\res\\values-rs\\strings.xml",
+                    "from": {
+                        "startLines": "4,3,2,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "294,176,57,413",
+                        "endColumns": "117,116,117,92",
+                        "endOffsets": "407,288,170,501"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,173,290,408",
+                        "endColumns": "117,116,117,92",
+                        "endOffsets": "168,285,403,496"
+                    }
+                }
+            ]
+        }
+    ]
+}

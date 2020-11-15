@@ -16,16 +16,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    checkerboard.cpp \
+    chessman.cpp \
     main.cpp \
-    mainwindow.cpp
+    mylabel.cpp
+#QT += axcontainer
 
 HEADERS += \
-    mainwindow.h
+    checkerboard.h \
+    chessman.h \
+    mylabel.h
 
 FORMS += \
     mainwindow.ui
-
+#RC_ICONS = heart.ico
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+dataFiles.files+=src/heart.ico
+dataFiles.path = /assets/data
+INSTALLS += dataFiles
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android_sources
+DISTFILES += \
+    android_sources/AndroidManifest.xml \
+    android_sources/AndroidManifest_copy.xml \
+    android_sources/heart.png
+
+RESOURCES += \
+    img.qrc
