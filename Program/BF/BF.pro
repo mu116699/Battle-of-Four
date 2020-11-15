@@ -18,14 +18,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     checkerboard.cpp \
     chessman.cpp \
-    main.cpp \
-    mylabel.cpp
-#QT += axcontainer
+    main.cpp
 
 HEADERS += \
     checkerboard.h \
-    chessman.h \
-    mylabel.h
+    chessman.h
 
 FORMS += \
     mainwindow.ui
@@ -34,15 +31,3 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-dataFiles.files+=src/heart.ico
-dataFiles.path = /assets/data
-INSTALLS += dataFiles
-ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android_sources
-DISTFILES += \
-    android_sources/AndroidManifest.xml \
-    android_sources/AndroidManifest_copy.xml \
-    android_sources/heart.png
-
-RESOURCES += \
-    img.qrc

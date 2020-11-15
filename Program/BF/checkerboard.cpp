@@ -11,19 +11,16 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDebug>
-#include <QTime>
-#include <QVBoxLayout>
-//#include <QAxWidget>
 
 Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
 {
 //   setGeometry(100,100,600,800);
-//   this->resize(800,500);
-//   this->setMinimumSize(800, 500);
-//   this->setMaximumSize(800, 500);
+   this->resize(800,500);
+   this->setMinimumSize(800, 500);
+   this->setMaximumSize(800, 500);
 
    QPalette palette;
-   palette.setBrush(QPalette::Background, QBrush(Qt::cyan));
+   palette.setBrush(QPalette::Background, QBrush(Qt::green));
    this->setPalette(palette);
     paint=new QPainter;
    //init
@@ -34,54 +31,43 @@ Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
    selectFlag = false;
    canMoveFlag = false;
    movedFlag = false;
-   machineFlag = false;
    chessmanSelected = QPoint(0,0);
    TopoBoard={{1,{5,2}},{2,{1,6,3}},{3,{2,7,4}},{4,{3,8}},
               {5,{9,6,1}},{6,{5,10,7,2}},{7,{6,11,8,3}},{8,{7,12,4}},
               {9,{13,10,5}},{10,{9,14,11,6}},{11,{10,15,12,7}},{12,{11,16,8}},
-              {13,{14,9}},{14,{13,15,10}},{15,{14,16,11}},{16,{15,12}}};
+              {13,{14,9,0}},{14,{13,15,10}},{15,{14,16,11}},{16,{15,12}}};
    TopoAndCoord = {{1,{1,1}},{2,{1,2}},{3,{1,3}},{4,{1,4}},{5,{2,1}},{6,{2,2}},{7,{2,3}},{8,{2,4}},
                    {9,{3,1}},{10,{3,2}},{11,{3,3}},{12,{3,4}},{13,{4,1}},{14,{4,2}},{15,{4,3}},{16,{4,4}}};
    TopoColumn={{1,{1,2,3,4}},{2,{5,6,7,8}},{3,{9,10,11,12}},{4,{13,14,15,16}}};//行拓扑
    TopoRow={{1,{1,5,9,13}},{2,{2,6,10,14}},{3,{3,7,11,15}},{4,{4,8,12,16}}};//列拓扑
-   chessBoardCoord={{1,QPoint(200,800)},{2,QPoint(400,800)},{3,QPoint(600,800)},{4,QPoint(800,800)},
-              {5,QPoint(200,600)},{6,QPoint(400,600)},{7,QPoint(600,600)},{8,QPoint(800,600)},
-              {9,QPoint(200,400)},{10,QPoint(400,400)},{11,QPoint(600,400)},{12,QPoint(800,400)},
-              {13,QPoint(200,200)},{14,QPoint(400,200)},{15,QPoint(600,200)},{16,QPoint(800,200)}};
+   chessBoardCoord={{1,QPoint(100,400)},{2,QPoint(200,400)},{3,QPoint(300,400)},{4,QPoint(400,400)},
+              {5,QPoint(100,300)},{6,QPoint(200,300)},{7,QPoint(300,300)},{8,QPoint(400,300)},
+              {9,QPoint(100,200)},{10,QPoint(200,200)},{11,QPoint(300,200)},{12,QPoint(400,200)},
+              {13,QPoint(100,100)},{14,QPoint(200,100)},{15,QPoint(300,100)},{16,QPoint(400,100)}};
 
 
    startButton = new QPushButton("Sart the Game",this);
-   startButton->setGeometry(200,1000,400,80);
+   startButton->setGeometry(500,130,200,40);
    machine = new QPushButton("Man-Machine",this);
-   machine->setGeometry(200,1100,400,80);
+   machine->setGeometry(500,200,200,40);
    handicap = new QPushButton("Handicap",this);
-   handicap->setGeometry(200,1200,400,80);
+   handicap->setGeometry(500,270,200,40);
    help = new QPushButton("Help",this);
-   help->setGeometry(200,1300,400,80);
+   help->setGeometry(500,340,200,40);
 
    connect(startButton,SIGNAL(clicked()),this,SLOT(startGame()));
    connect(handicap,SIGNAL(clicked()),this,SLOT(oneHandicap()));
-   connect(machine,SIGNAL(clicked()),this,SLOT(oneMachine()));
-   connect(help,SIGNAL(clicked()),this,SLOT(oneHelp()));
 
-   //x86-64(已经删除)
-
-   // Android
    welcome = new QLabel("Welcome to Battle of Four!",this);
-   welcome->setGeometry(200,0,800,100);
+   welcome->setGeometry(200,0,400,100);
    welcome->setStyleSheet("color:red");// 文本颜色
    welcome->setFont(QFont( "Timers" , 17,  QFont::Bold) );
-   thanks = new QLabel("Thanks to Qiaoli Lu, Min Fu、Suqin Zhai \nand other friends of Jiyuan,\nusing version 1.0.",this);
-//   thanks = new QLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXX \nXXXXXXXXXXXXXXXXXXXXXXXXXXX,\nXXXXXXXXXXXXXXXXX.",this);
-   thanks->setGeometry(100,1400,900,180);
+   //thanks = new QLabel("Thanks to Qiaoli Lu, Min Fu \nand other friends of Jiyuan,\nusing version 1.0.",this);
+     thanks = new QLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXX \nXXXXXXXXXXXXXXXXXXXXXXXXXXX,\nXXXXXXXXXXXXXXXXX.",this);
+   thanks->setGeometry(460,390,300,60);
    //thanks->setStyleSheet("color:blue");// 文本颜色
    author = new QLabel("Author:Jack Tian©",this);
-   author->setGeometry(600,1600,400,80);
-   this->setMouseTracking (true);
-
-   img = new MyLabel("",this);
-   img->setPixmap(QPixmap(":/heart.ico"));
-   img->setGeometry(100,1580,200,200);
+   author->setGeometry(600,450,200,20);
 
 }
 Checkerboard::~Checkerboard()
@@ -99,9 +85,6 @@ void Checkerboard::startGame()
             chessRed={13,14,15,16};
             chessBlue = {1,2,3,4};
             movedFlag = false;
-            playChessFlag = true;
-            machineFlag = false;
-            repaint();
         }
         else
         {
@@ -112,9 +95,6 @@ void Checkerboard::startGame()
     {
         chessRed={13,14,15,16};
         chessBlue = {1,2,3,4};
-        playChessFlag = true;
-        machineFlag = false;
-        repaint();
     }
 }
 
@@ -123,101 +103,10 @@ void Checkerboard::oneHandicap()
     if(playChessFlag==true)
     {
         playChessFlag =false;
-        if((machineFlag==true)&&(playChessFlag==false))
-        {
-            machineMove(chessBlue);
-            killChessman(moveChessTopo);
-            playChessFlag =true;
-        }
     }
     else
     {
         playChessFlag =true;
-    }
-}
-
-void Checkerboard::oneMachine()
-{
-    if(movedFlag==true)
-    {
-        if(QMessageBox::Yes == QMessageBox::information(this,QStringLiteral("Start the Game"),
-                              QStringLiteral("Restart the game?"),QMessageBox::Yes | QMessageBox:: No))
-        {
-            chessRed={13,14,15,16};
-            chessBlue = {1,2,3,4};
-            movedFlag = false;
-            playChessFlag = true;
-            machineFlag = false;
-            repaint();
-        }
-        else
-        {
-            close();
-        }
-    }
-    else
-    {
-        chessRed={13,14,15,16};
-        chessBlue = {1,2,3,4};
-        playChessFlag = true;
-        machineFlag = false;
-        repaint();
-    }
-    machineFlag = true;
-    repaint();
-}
-
-void Checkerboard::oneHelp()
-{
-//    QDialog *window = new QDialog(this);
-//    window->setWindowTitle("Help");
-//    window->show();
-//    QVBoxLayout *mainLayout = new QVBoxLayout(window);
-//    QAxWidget *myWidget = new QAxWidget(this);
-//    mainLayout->addWidget(myWidget);
-//    myWidget->setControl(QString::fromUtf8("{8856F961-340A-11D0-A96B-00C04FD705A2}"));//注册组件UUID
-//    myWidget->setObjectName(QString::fromUtf8("my_musicLibraryWebWid"));//设置控件的名称
-//    myWidget->setFocusPolicy(Qt::StrongFocus);       //设置控件接收键盘焦点的方式：鼠标单击、Tab键
-//    myWidget->setProperty("DisplayAlerts",false);    //不显示任何警告信息。
-//    myWidget->setProperty("DisplayScrollBars",true); // 显示滚动条
-//    QString webStr = QString("https://github.com/mu116699/Battle-of-Four/blob/master/README.md");//设置要显示的Url  kugou的。
-//    myWidget->dynamicCall("Navigate(const QString&)",webStr);
-}
-
-void Checkerboard::machineMove(QVector<int> &chess)
-{
-    QVector<int> total;
-    for (int i = 0;i<chess.size();i++) {
-        total.push_back(i);
-    }
-
-    for (int i = 0;i<chess.size();i++) {
-        //棋子随机
-        qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
-        int usingChess = qrand() % (total.size());
-        total.remove(usingChess);
-        qDebug()<<"usingChess"<<usingChess;
-
-        QVector<int>chessTopo=TopoBoard.value(chess[usingChess]);
-
-        QVector<int> topoTotal;
-        for (int m = 0;m<chessTopo.size();m++) {
-            topoTotal.push_back(m);
-        }
-        for (int j=0;j<chessTopo.size();j++) {
-            //方向随机
-            qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
-            int usingDirection = qrand() % (topoTotal.size());
-            topoTotal.remove(usingDirection);
-            qDebug()<<"usingDirection"<<usingChess;
-
-            if(getState(chessTopo[usingDirection])==-1)
-            {
-                chess[usingChess]=chessTopo[usingDirection];
-                moveChessTopo = chessTopo[usingDirection];
-                return;
-            }
-        }
     }
 }
 
@@ -240,7 +129,7 @@ bool Checkerboard::canMoveChess(QVector<int> chess)
 
 void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
 {
-    //qDebug()<<getState(getTopoColumn[0])<<getState(getTopoColumn[1])<<getState(getTopoColumn[2])<<getState(getTopoColumn[3]);
+    qDebug()<<getState(getTopoColumn[0])<<getState(getTopoColumn[1])<<getState(getTopoColumn[2])<<getState(getTopoColumn[3]);
     if(getState(getTopoColumn[0])==-1)
     {
         if(playChessFlag==false)
@@ -255,7 +144,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -273,7 +161,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -294,7 +181,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -312,7 +198,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -336,7 +221,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -354,7 +238,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -375,7 +258,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -393,7 +275,6 @@ void Checkerboard::rowColumnjudge(QVector<int> getTopoColumn)
                     {
                         chessRed={13,14,15,16};
                         chessBlue = {1,2,3,4};
-                        playChessFlag = true;
                     }
                     else
                     {
@@ -446,21 +327,39 @@ void Checkerboard::killChessman(int moveChessTopo)
     canMoveFlag =false;
 }
 
+//Chessman chessmanRed[4];
+//Chessman chessmaBlue[4];
+
+void paint_init()
+{
+    Chessman Chessman[8];
+    //void init(int chessmanTopoid, QPoint chessmanCoord, CHESSMAN_COLOR chessmanColor,CHESSMAN_STATE chessmanState)
+    Chessman[0].init(0,QPoint(400,400),COLOR_RED,LIVE);
+    Chessman[1].init(0,QPoint(100,100),COLOR_RED,LIVE);
+    Chessman[2].init(0,QPoint(200,100),COLOR_RED,LIVE);
+    Chessman[3].init(0,QPoint(300,100),COLOR_RED,LIVE);
+    Chessman[4].init(0,QPoint(400,100),COLOR_BLUE,LIVE);
+    Chessman[5].init(0,QPoint(100,400),COLOR_BLUE,LIVE);
+    Chessman[6].init(0,QPoint(200,400),COLOR_BLUE,LIVE);
+    Chessman[7].init(0,QPoint(300,400),COLOR_BLUE,LIVE);
+
+}
+
 void Checkerboard::paintEvent(QPaintEvent *)
 {
-    int x=200,y=200;
+    int x=100,y=100;
     paint->begin(this);
     paint->setPen(QPen(Qt::black,4,Qt::SolidLine));
     paint->setBrush(QBrush(Qt::white,Qt::SolidPattern));
 //画4条横线
     for(int i=0;i<4;i++)
     {
-        paint->drawLine(200,y+200*i,800,y+200*i);
+        paint->drawLine(100,y+100*i,400,y+100*i);
     }
 //画4条竖线
     for(int i=0;i<4;i++)
     {
-        paint->drawLine(x+200*i,200,x+200*i,800);
+        paint->drawLine(x+100*i,100,x+100*i,400);
     }
 //在棋盘正中做两个红棋子
     drawChessman(chessRed,chessBlue,playChessFlag,selectFlag,paint,chessmanSelected);
@@ -473,11 +372,11 @@ void Checkerboard::drawChessman(QVector<int> chessRed,QVector<int> chessBlue,boo
         //在棋盘正中做两个红棋子
         paint->setBrush(QBrush(Qt::red,Qt::SolidPattern));
         for (int i =0;i<chessRed.size();i++) {
-            paint->drawEllipse(searchBoardCoord(chessRed[i]),50,50);
+            paint->drawEllipse(searchBoardCoord(chessRed[i]),20,20);
         }
         paint->setBrush(QBrush(Qt::blue,Qt::SolidPattern));
         for (int i =0;i<chessBlue.size();i++) {
-            paint->drawEllipse(searchBoardCoord(chessBlue[i]),50,50);
+            paint->drawEllipse(searchBoardCoord(chessBlue[i]),20,20);
         }
     }
     else
@@ -486,16 +385,16 @@ void Checkerboard::drawChessman(QVector<int> chessRed,QVector<int> chessBlue,boo
         {
             paint->setBrush(QBrush(Qt::blue,Qt::SolidPattern));
             for (int i =0;i<chessBlue.size();i++) {
-                paint->drawEllipse(searchBoardCoord(chessBlue[i]),50,50);
+                paint->drawEllipse(searchBoardCoord(chessBlue[i]),20,20);
             }
             paint->setBrush(QBrush(Qt::yellow,Qt::SolidPattern));
-            paint->drawEllipse(chessmanSelected,50,50);
+            paint->drawEllipse(chessmanSelected,20,20);
 
             paint->setBrush(QBrush(Qt::red,Qt::SolidPattern));
             for (int i =0;i<chessRed.size();i++) {
                 if(chessmanSelected!=searchBoardCoord(chessRed[i]))
                 {
-                     paint->drawEllipse(searchBoardCoord(chessRed[i]),50,50);
+                     paint->drawEllipse(searchBoardCoord(chessRed[i]),20,20);
                 }
             }
         }
@@ -503,16 +402,16 @@ void Checkerboard::drawChessman(QVector<int> chessRed,QVector<int> chessBlue,boo
         {
             paint->setBrush(QBrush(Qt::red,Qt::SolidPattern));
             for (int i =0;i<chessRed.size();i++) {
-                paint->drawEllipse(searchBoardCoord(chessRed[i]),50,50);
+                paint->drawEllipse(searchBoardCoord(chessRed[i]),20,20);
             }
             paint->setBrush(QBrush(Qt::yellow,Qt::SolidPattern));
-            paint->drawEllipse(chessmanSelected,50,50);
+            paint->drawEllipse(chessmanSelected,20,20);
 
             paint->setBrush(QBrush(Qt::blue,Qt::SolidPattern));
             for (int i =0;i<chessBlue.size();i++) {
                 if(chessmanSelected!=searchBoardCoord(chessBlue[i]))
                 {
-                     paint->drawEllipse(searchBoardCoord(chessBlue[i]),50,50);
+                     paint->drawEllipse(searchBoardCoord(chessBlue[i]),20,20);
                 }
             }
         }
@@ -533,7 +432,6 @@ void Checkerboard::mousePressEvent(QMouseEvent * e)
             {
                 chessRed={13,14,15,16};
                 chessBlue = {1,2,3,4};
-                playChessFlag = true;
             }
             else
             {
@@ -571,17 +469,6 @@ void Checkerboard::mousePressEvent(QMouseEvent * e)
     }
     chessmanSelected = selectChessman(playChessFlag,mPos);//选中棋子
     repaint();
-}
-
-void Checkerboard::mouseReleaseEvent(QMouseEvent *)
-{
-    if((machineFlag==true)&&(playChessFlag==false))
-    {
-        machineMove(chessBlue);
-        playChessFlag =true;
-        killChessman(moveChessTopo);
-        repaint();
-    }
 }
 
 QPoint Checkerboard::selectChessman(bool pCFlag,QPoint pressPos)
@@ -625,7 +512,7 @@ void Checkerboard::moveChessman(QPoint pressPos)
     {
         int chessDistance =(chessBoardCoord.value(i).x()-pressPos.x())*(chessBoardCoord.value(i).x()-pressPos.x())+
                 (chessBoardCoord.value(i).y()-pressPos.y())*(chessBoardCoord.value(i).y()-pressPos.y());
-        if(chessDistance<=2500)
+        if(chessDistance<=400)
         {
             moveChessTopo = chessBoardCoord.key(chessBoardCoord[i]);
         }
