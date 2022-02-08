@@ -71,8 +71,7 @@ Checkerboard::Checkerboard(QWidget *parent) : QWidget(parent)
    welcome->setGeometry(200,0,800,100);
    welcome->setStyleSheet("color:red");// 文本颜色
    welcome->setFont(QFont( "Timers" , 17,  QFont::Bold) );
-   thanks = new QLabel("Thanks to Qiaoli Lu, Min Fu,Suqin Zhai, \nDaojian Ge and other friends of Jiyuan,\nusing version 1.0.",this);
-   //thanks = new QLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXX \nXXXXXXXXXXXXXXXXXXXXXXXXXXX,\nXXXXXXXXXXXXXXXXX.",this);
+   thanks = new QLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXX \nXXXXXXXXXXXXXXXXXXXXXXXXXXX,\nXXXXXXXXXXXXXXXXX.",this);
    thanks->setGeometry(100,1200,900,180);
    //thanks->setStyleSheet("color:blue");// 文本颜色
    author = new QLabel("Author:Jack Tian©",this);
